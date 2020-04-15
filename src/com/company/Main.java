@@ -18,5 +18,15 @@ public class Main {
             m = rsa.decryptFast(c,rsa.getPublicKey(),rsa.getPrivateKey());
             System.out.println("Decrypted message: "+m);
         }
+
+//        c = rsa.encrypt(BigInteger.valueOf('m'),rsa.getPublicKey());
+//        System.out.println("Crypted message: "+ c);
+//        m = rsa.decryptFast(c,rsa.getPublicKey(),rsa.getPrivateKey());
+//        System.out.println("Decrypted message: "+Character.toChars(m.intValue())[0]);
+//
+//        System.out.println(message);
+//        message.chars().boxed().forEach(mes -> System.out.print(Character.toChars(mes)));
+
     }
+
 }
