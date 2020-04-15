@@ -3,6 +3,7 @@ package com.company;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class RSA {
 
@@ -61,9 +62,26 @@ public class RSA {
         }
     }
 
+    public List<BigInteger> encrypt(String m, BigInteger[] publicKey){
+        List<Integer> charCodes;
+        List<BigInteger> encryptedCharCodes = new ArrayList<>();
+         charCodes = m.chars()
+                        .boxed()
+                        .collect(Collectors.toList());
+         charCodes.forEach(num -> encryptedCharCodes.add(encrypt(BigInteger.valueOf(num),publicKey)));
+         return encryptedCharCodes;
+    }
+
     public BigInteger encrypt(int m, BigInteger[] publicKey){
       return encrypt(BigInteger.valueOf(m),publicKey);
     }
+
+    public String decrypt(List<BigInteger> c, BigInteger[] publicKey, BigInteger privateKey){
+        StringBuilder decryptedMessage = new StringBuilder();
+        c.forEach(num->decryptedMessage.append(Character.toChars(decryptFast(num,publicKey,privateKey).intValue())));
+        return decryptedMessage.toString();
+    }
+
 
     public BigInteger decrypt(BigInteger c, BigInteger[] publicKey, BigInteger privateKey){
         BigInteger d = privateKey;
