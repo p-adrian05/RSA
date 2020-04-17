@@ -148,8 +148,6 @@ public class RSA {
         BigInteger f;
         BigInteger e = BigInteger.TWO;
         BigInteger d;
-        Random random = new Random();
-        Supplier<BigInteger> randomSupplier;
         while(p.equals(q)){
             p=RsaMath.generatePrime(MIN,MAX);
         }
@@ -159,10 +157,9 @@ public class RSA {
             f = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
             System.out.println("p: "+p);
             System.out.println("q: "+q);
-            randomSupplier = ()-> BigInteger.valueOf(random.nextInt(f.intValue()));
 
             while (!RsaMath.isRelativePrime(e,f)){
-                e = randomSupplier.get();
+                e = RsaMath.generateRandomBigInteger(2,f.intValue()-1);
             }
 
             System.out.println("e: "+e);

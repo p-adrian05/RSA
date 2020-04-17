@@ -25,7 +25,7 @@ public class RsaMath<type, t> {
             return String.valueOf((char)(r.nextInt(26)+'a'));
     }
 
-    private static BigInteger generateRandomBigInteger(int min, int max){
+    public static BigInteger generateRandomBigInteger(int min, int max){
         Random random = new Random();
         return BigInteger.valueOf(random.nextInt((max - min) + 1)+ min);
     }
