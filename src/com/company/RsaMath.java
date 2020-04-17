@@ -1,13 +1,10 @@
 package com.company;
 
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class RsaMath {
+public class RsaMath<type, t> {
 
     public RsaMath(){}
 
@@ -16,25 +13,19 @@ public class RsaMath {
     }
 
     public static BigInteger generatePrime(int min, int max){
-        Random random = new Random();
-
-        Supplier<BigInteger> randomSupplier = ()-> BigInteger.valueOf(random.nextInt((max - min) + 1)+ min);
-        BigInteger prime = randomSupplier.get();
-        if(min>15) {
-            while (!(isPrime(prime, BigInteger.valueOf(2)) && isPrime(prime, BigInteger.valueOf(13)) && isPrime(prime, BigInteger.valueOf(15)) && prime.mod(BigInteger.TWO).equals(BigInteger.ONE))) {
-                prime = randomSupplier.get();
-            }
-        }else{
-            while (!isPrime(prime, BigInteger.valueOf(2))){
-                prime = randomSupplier.get();
-            }
+        BigInteger prime = generateRandomBigInteger(min, max);
+        while (!isPrime(prime, BigInteger.valueOf(2))){
+                prime = generateRandomBigInteger(min, max);
         }
-
         return prime;
 
     }
 
-
+    private static BigInteger generateRandomBigInteger(int min, int max){
+        Random random = new Random();
+        Supplier<BigInteger> randomSupplier = ()-> BigInteger.valueOf(random.nextInt((max - min) + 1)+ min);
+        return randomSupplier.get();
+    }
 
     public static BigInteger euclid(BigInteger a, BigInteger b){
         BigInteger r;
@@ -86,27 +77,72 @@ public class RsaMath {
      * Tovabbi teszt kovetkezik:( a^(2^i*d) (mod p)) == p-1 akkor prim
      * @return true or false
      */
+//egykoros teszt
+//    private static boolean isPrime(BigInteger p,BigInteger a){
+//        if(p.intValue()>3 && (a.intValue()>=2 && a.compareTo(p)==-1)){
+//            if(p.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
+//                return false;
+//            }
+//            BigInteger d = p.subtract(BigInteger.ONE);
+//            int s =0;
+//            while (d.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
+//                d = d.divide(BigInteger.TWO);
+//                s++;
+//            }
+//            BigInteger t;
+//            for(int i = 0; i<s;i++){
+//                t=a.modPow(BigInteger.valueOf(2).pow(i).multiply(d),p);
+//
+//                if(t.equals(p.subtract(BigInteger.ONE))){
+//                    return true;
+//
+//                }
+//            }
+//
+//            return false;
+//        }
+//        throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
+//
+//    }
+    //tobbkoros
     private static boolean isPrime(BigInteger p,BigInteger a){
         if(p.intValue()>3 && (a.intValue()>=2 && a.compareTo(p)==-1)){
+            //ha paros akkor false
+            if(p.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
+                return false;
+            }
+            //a bazis szamok generalasa
+            int aMax = p.subtract(BigInteger.ONE).intValue();
+            int aMin = a.intValue()+1;
+            List<BigInteger> aValues = new ArrayList<>();
+            aValues.add(a);
+            for(int i = 0; i<2;i++){
+                aValues.add(generateRandomBigInteger(aMin,aMax));
+            }
+            //addig osztjuk amig maradek nelkul lehet
             BigInteger d = p.subtract(BigInteger.ONE);
             int s =0;
             while (d.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
                 d = d.divide(BigInteger.TWO);
                 s++;
             }
-            BigInteger t = a.modPow(d,p);
-            if(t.equals(BigInteger.ONE)){
-                return true;
-            }
-            for(int i = 1; i<s;i++){
-                t=a.modPow(BigInteger.valueOf(2).pow(i).multiply(d),p);
 
-                if(t.equals(p.subtract(BigInteger.ONE))){
-                    return true;
+            //tobb a bazis szamra vizsgaljuk
+            BigInteger t;
+            int checkIfPrimeCount = 0;
+            for (BigInteger aValue : aValues) {
+                for (int i = 0; i < s; i++) {
+                    t = fastMod(aValue,BigInteger.valueOf(2).pow(i).multiply(d), p);
+
+                    if (t.equals(p.subtract(BigInteger.ONE))) {
+                        checkIfPrimeCount++;
+                        break;
+                    }
                 }
+
             }
 
-            return false;
+            return checkIfPrimeCount == aValues.size();
         }
         throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
 
@@ -116,8 +152,8 @@ public class RsaMath {
      *
      *
      * @param a egesz szam alap
-     * @param b >1 kitevo
-     * @param m pozitiv egesz szam
+     * @param b  kitevo
+     * @param m  egesz szam
      *          a^b (mod m) keplet
      * Eloszor felbontjuk a kitevot 2 hatvanyaira, osztjuk kettovel amig 0-t nem kapunk
      * es elmentjuk a 2 hatvanyait egy listaba, ami pont i lesz akkor ha 1 maradekot kapunk 2-vel osztva.
@@ -126,7 +162,6 @@ public class RsaMath {
      * @return a biginteger
      */
     public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
-        if(b.compareTo(BigInteger.ONE)==1 && m.compareTo(BigInteger.ZERO)==1) {
             int i = 0;
             BigInteger q = b;
             BigInteger sum = BigInteger.ONE;
@@ -146,9 +181,6 @@ public class RsaMath {
                 sum = sum.multiply(a.modPow(BigInteger.TWO.pow(listPow), m));
             }
             return sum.mod(m);
-        }
-        throw new IllegalArgumentException("Wrong arguments: b must be > 1 and m must be > 0");
-
     }
 
     public static BigInteger chineseRemainder(BigInteger[] a, BigInteger[] n){
