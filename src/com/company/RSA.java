@@ -71,6 +71,18 @@ public class RSA {
          charCodes.forEach(num -> encryptedCharCodes.add(encrypt(BigInteger.valueOf(num),publicKey)));
          return encryptedCharCodes;
     }
+//    public String encrypt(String m, BigInteger[] publicKey){
+//        List<Integer> charCodes;
+//        StringBuilder encryptedCharCodes = new StringBuilder();
+//        charCodes = m.chars()
+//                .boxed()
+//                .collect(Collectors.toList());
+//        charCodes.forEach(code-> encryptedCharCodes
+//                .append(encrypt(BigInteger.valueOf(code), publicKey))
+//                .append(RsaMath.generateRandomCharacter()));
+//
+//        return encryptedCharCodes.toString();
+//    }
 
     public BigInteger encrypt(int m, BigInteger[] publicKey){
       return encrypt(BigInteger.valueOf(m),publicKey);
@@ -81,6 +93,22 @@ public class RSA {
         c.forEach(num->decryptedMessage.append(Character.toChars(decryptFast(num,publicKey,privateKey).intValue())));
         return decryptedMessage.toString();
     }
+//    public String decrypt(String c, BigInteger[] publicKey, BigInteger privateKey){
+//        StringBuilder decryptedMessage = new StringBuilder();
+//        StringBuilder messageToDecrypt = new StringBuilder();
+//        for(int i = 0; i<c.length();i++){
+//            if( ((int)c.charAt(i)) <48 || ((int)c.charAt(i))>57){
+//                messageToDecrypt.append(" ");
+//            }else{
+//                messageToDecrypt.append(c.charAt(i));
+//            }
+//     }
+//
+//     List<String> listToDecrypt = List.of(messageToDecrypt.toString().split(" "));
+//     listToDecrypt.forEach(num->decryptedMessage.append(Character.toChars(decryptFast(BigInteger.valueOf(Integer.parseInt(num)),publicKey,privateKey).intValue())));
+//    return decryptedMessage.toString();
+//
+//    }
 
 
     public BigInteger decrypt(BigInteger c, BigInteger[] publicKey, BigInteger privateKey){

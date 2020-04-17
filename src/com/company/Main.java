@@ -21,9 +21,10 @@ public class Main {
 
             String stringMes = "password1234";
             System.out.println("String message: "+ stringMes);
-            List<BigInteger> encryptedMessage = rsa.encrypt(stringMes,rsa.getPublicKey());
-            System.out.println("Crypted string message: "  +encryptedMessage);
-            String mes = rsa.decrypt(encryptedMessage,rsa.getPublicKey(),rsa.getPrivateKey());
+            //String encryptedMessage = rsa.encrypt(stringMes,rsa.getPublicKey());
+            List<BigInteger> encryptedMessageList = rsa.encrypt(stringMes,rsa.getPublicKey());
+            System.out.println("Crypted string message: "  +encryptedMessageList);
+            String mes = rsa.decrypt(encryptedMessageList,rsa.getPublicKey(),rsa.getPrivateKey());
             System.out.println("Decrypted string message: "+mes);
         }
 

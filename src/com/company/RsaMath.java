@@ -20,11 +20,14 @@ public class RsaMath<type, t> {
         return prime;
 
     }
+    public static String generateRandomCharacter() {
+            Random r = new Random();
+            return String.valueOf((char)(r.nextInt(26)+'a'));
+    }
 
     private static BigInteger generateRandomBigInteger(int min, int max){
         Random random = new Random();
-        Supplier<BigInteger> randomSupplier = ()-> BigInteger.valueOf(random.nextInt((max - min) + 1)+ min);
-        return randomSupplier.get();
+        return BigInteger.valueOf(random.nextInt((max - min) + 1)+ min);
     }
 
     public static BigInteger euclid(BigInteger a, BigInteger b){
