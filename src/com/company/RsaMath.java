@@ -76,8 +76,7 @@ public class RsaMath<type, t> {
      * @param a >=2 and <p
      * A p - 1 erteket addig osztjuk 22-vel ameddig maradék nélkül lehetseges, kozben noveljuk s-t.
      * es d tarolja a maradekot.
-     * Az elso teszt: a^d mod p ha == 1 akkor prim
-     * Tovabbi teszt kovetkezik:( a^(2^i*d) (mod p)) == p-1 akkor prim
+     * teszt kovetkezik:( a^(2^i*d) (mod p)) == p-1 akkor prim
      * @return true or false
      */
 //egykoros teszt
