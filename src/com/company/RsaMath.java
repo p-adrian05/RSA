@@ -40,6 +40,8 @@ public class RsaMath<type, t> {
         return a;
     }
     public static BigInteger[] euclidExtended(BigInteger a, BigInteger b) {
+        //r maradek
+        //q osztas eredmenye
         BigInteger x0 = BigInteger.ONE;
         BigInteger x1 = BigInteger.ZERO;
         BigInteger y0 = BigInteger.ZERO;
@@ -68,45 +70,6 @@ public class RsaMath<type, t> {
         return new BigInteger[]{a, x, y};
     }
 
-
-    /**
-     *
-     *
-     * @param p > 3
-     * @param a >=2 and <p
-     * A p - 1 erteket addig osztjuk 22-vel ameddig maradék nélkül lehetseges, kozben noveljuk s-t.
-     * es d tarolja a maradekot.
-     * teszt kovetkezik:( a^(2^i*d) (mod p)) == p-1 akkor prim
-     * @return true or false
-     */
-//egykoros teszt
-//    private static boolean isPrime(BigInteger p,BigInteger a){
-//        if(p.intValue()>3 && (a.intValue()>=2 && a.compareTo(p)==-1)){
-//            if(p.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
-//                return false;
-//            }
-//            BigInteger d = p.subtract(BigInteger.ONE);
-//            int s =0;
-//            while (d.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
-//                d = d.divide(BigInteger.TWO);
-//                s++;
-//            }
-//            BigInteger t;
-//            for(int i = 0; i<s;i++){
-//                t=a.modPow(BigInteger.valueOf(2).pow(i).multiply(d),p);
-//
-//                if(t.equals(p.subtract(BigInteger.ONE))){
-//                    return true;
-//
-//                }
-//            }
-//
-//            return false;
-//        }
-//        throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
-//
-//    }
-    //tobbkoros
     private static boolean isPrime(BigInteger p,BigInteger a){
         if(p.intValue()>3 && (a.intValue()>=2 && a.compareTo(p)==-1)){
             //ha paros akkor false
@@ -131,20 +94,25 @@ public class RsaMath<type, t> {
 
             //tobb a bazis szamra vizsgaljuk
             BigInteger t;
+
             int checkIfPrimeCount = 0;
+            int checkForAllA = 0;
             for (BigInteger aValue : aValues) {
+                t = fastMod(aValue,d, p);
+                if(t.equals(BigInteger.ONE)){
+                    checkIfPrimeCount++;
+                }
                 for (int i = 0; i < s; i++) {
                     t = fastMod(aValue,BigInteger.valueOf(2).pow(i).multiply(d), p);
-
-                    if (t.equals(p.subtract(BigInteger.ONE))) {
+                    if (t.equals(BigInteger.valueOf(-1))) {
                         checkIfPrimeCount++;
-                        break;
                     }
                 }
-
+                if(checkIfPrimeCount==s){
+                    checkForAllA++;
+                }
             }
-
-            return checkIfPrimeCount == aValues.size();
+            return checkForAllA == aValues.size();
         }
         throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
 
@@ -170,29 +138,42 @@ public class RsaMath<type, t> {
             BigInteger[] dAndR;
             List<Integer> listPows = new LinkedList<>();
 
+            //a kitevot 2-vel addig osztjuk amig 0 nem lesz
             while (!q.equals(BigInteger.ZERO)) {
+                //eltaroljuk a osztas eredmenyet es a maradekot egy tombbe
                 dAndR = q.divideAndRemainder(BigInteger.TWO);
+                //tomb elso eleme az osztas eredmenye
                 q = dAndR[0];
+                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis i erteket, minden iteracional novelve
+                //ez lesz a ketto havtanyai
                 if (dAndR[1].equals(BigInteger.ONE)) {
                     listPows.add(i);
                 }
                 i++;
             }
-
+            //vegigmegyunk ketto hatvanyain, az a alapot a kitevo ketto hatvanyaira emeljuk es vesszuk a megadott az m-el osztott
+            //maradekot, minden iteracional kapott eredmenyt osszeszorozzuk az elozoekkel
             for (Integer listPow : listPows) {
                 sum = sum.multiply(a.modPow(BigInteger.TWO.pow(listPow), m));
             }
+            //vegul a szorzas eredmenyen vesszuk az m mel osztott maradekot
             return sum.mod(m);
     }
 
-    public static BigInteger chineseRemainder(BigInteger[] a, BigInteger[] n){
-        BigInteger M = Arrays.stream(n).reduce(BigInteger::multiply).get();
+    //x ≡ SUM (ai ∗ yi ∗ Mi) (mod M)
+    public static BigInteger chineseRemainder(BigInteger[] a, BigInteger[] m){
+        //M a kapott modulok szorzata
+        BigInteger M = Arrays.stream(m).reduce(BigInteger::multiply).get();
         BigInteger Mi;
         BigInteger sum = BigInteger.ZERO;
+        //minden a ra Mi az aktualis i-edik modulo M-mel valo osztasanak eredmenye
+        //az aktualais a erteket szorozzuk az Mi és i-edik moduloval kapott kiterjesztett euc.
+        //kapott tomb masodik ertekevel ami az x erteke, majd szorozzuk még a Mi ertekevel.
         for(int i = 0; i<a.length;i++){
-            Mi = M.divide(n[i]);
-            sum = sum.add(a[i].multiply(euclidExtended(Mi,n[i])[1]).multiply(Mi));
+            Mi = M.divide(m[i]);
+            sum = sum.add(a[i].multiply(euclidExtended(Mi,m[i])[1]).multiply(Mi));
         }
+        //vegul vesszuk az M-vel valo osztasi maradekot
         return sum.mod(M);
     }
 
