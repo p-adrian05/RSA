@@ -70,7 +70,7 @@ public class RsaMath<type, t> {
         return new BigInteger[]{a, x, y};
     }
 
-    private static boolean isPrime(BigInteger p,BigInteger a){
+    public static boolean isPrime(BigInteger p,BigInteger a){
         if(p.intValue()>3 && (a.intValue()>=2 && a.compareTo(p)==-1)){
             //ha paros akkor false
             if(p.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
@@ -90,6 +90,7 @@ public class RsaMath<type, t> {
             while (d.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
                 d = d.divide(BigInteger.TWO);
                 s++;
+
             }
 
             //tobb a bazis szamra vizsgaljuk
@@ -136,7 +137,7 @@ public class RsaMath<type, t> {
             BigInteger q = b;
             BigInteger sum = BigInteger.ONE;
             BigInteger[] dAndR;
-            List<Integer> listPows = new LinkedList<>();
+            List<BigInteger> listPows = new LinkedList<>();
 
             //a kitevot 2-vel addig osztjuk amig 0 nem lesz
             while (!q.equals(BigInteger.ZERO)) {
@@ -144,18 +145,20 @@ public class RsaMath<type, t> {
                 dAndR = q.divideAndRemainder(BigInteger.TWO);
                 //tomb elso eleme az osztas eredmenye
                 q = dAndR[0];
-                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis i erteket, minden iteracional novelve
+                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis 2^i erteket, minden iteracional novelve it
                 //ez lesz a ketto havtanyai
                 if (dAndR[1].equals(BigInteger.ONE)) {
-                    listPows.add(i);
+                    listPows.add(BigInteger.TWO.pow(i));
                 }
                 i++;
             }
+        System.out.println(listPows);
             //vegigmegyunk ketto hatvanyain, az a alapot a kitevo ketto hatvanyaira emeljuk es vesszuk a megadott az m-el osztott
             //maradekot, minden iteracional kapott eredmenyt osszeszorozzuk az elozoekkel
-            for (Integer listPow : listPows) {
-                sum = sum.multiply(a.modPow(BigInteger.TWO.pow(listPow), m));
+            for (BigInteger pow : listPows) {
+                sum = sum.multiply(a.modPow(pow, m));
             }
+
             //vegul a szorzas eredmenyen vesszuk az m mel osztott maradekot
             return sum.mod(m);
     }
