@@ -7,35 +7,35 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-//        BigInteger m = BigInteger.valueOf(4756);
-//        BigInteger c;
-//	    RSA rsa = new RSA();
-//
-//        if(rsa.generateKeys()){
-//            System.out.println(rsa);
-//            System.out.println("Int message: "+ m);
-//            c = rsa.encrypt(m,rsa.getPublicKey());
-//            System.out.println("Crypted int message: "+ c);
-//            m = rsa.decryptFast(c,rsa.getPublicKey(),rsa.getPrivateKey());
-//            System.out.println("Decrypted int message: "+m);
-//
-//            String stringMes = "password1234";
-//            System.out.println("String message: "+ stringMes);
-//            //String encryptedMessage = rsa.encrypt(stringMes,rsa.getPublicKey());
-//            List<BigInteger> encryptedMessageList = rsa.encrypt(stringMes,rsa.getPublicKey());
-//            System.out.println("Crypted string message: "  +encryptedMessageList);
-//            String mes = rsa.decrypt(encryptedMessageList,rsa.getPublicKey(),rsa.getPrivateKey());
-//            System.out.println("Decrypted string message: "+mes);
-//        }
+        BigInteger m = BigInteger.valueOf(4756);
+        BigInteger c;
+	    RSA rsa = new RSA();
+
+        if(rsa.generateKeys()){
+            System.out.println(rsa);
+            System.out.println("Int message: "+ m);
+            c = rsa.encrypt(m,rsa.getPublicKey());
+            System.out.println("Crypted int message: "+ c);
+            m = rsa.decryptFast(c,rsa.getPublicKey(),rsa.getPrivateKey());
+            System.out.println("Decrypted int message: "+m);
+
+            String stringMes = "password1234";
+            System.out.println("String message: "+ stringMes);
+            //String encryptedMessage = rsa.encrypt(stringMes,rsa.getPublicKey());
+            List<BigInteger> encryptedMessageList = rsa.encrypt(stringMes,rsa.getPublicKey());
+            System.out.println("Crypted string message: "  +encryptedMessageList);
+            String mes = rsa.decrypt(encryptedMessageList,rsa.getPublicKey(),rsa.getPrivateKey());
+            System.out.println("Decrypted string message: "+mes);
+        }
 //        BigInteger a = new BigInteger(String.valueOf(840));
 //        BigInteger b = new BigInteger(String.valueOf(1100));
 //        System.out.println(List.of(RsaMath.euclidExtended(a,b)));
 
-        BigInteger a = new BigInteger(String.valueOf(13));
-        BigInteger b = new BigInteger(String.valueOf(16));
-        BigInteger m = new BigInteger(String.valueOf(15));
-        BigInteger p = new BigInteger(String.valueOf(177));
-        System.out.println(RsaMath.fastMod(a,b,m));
+//        BigInteger a = new BigInteger(String.valueOf(5));
+//        BigInteger b = new BigInteger(String.valueOf(117));
+//        BigInteger m = new BigInteger(String.valueOf(19));
+//        BigInteger p = new BigInteger(String.valueOf(177));
+//        System.out.println(RsaMath.fastMod(a,b,m));
         //System.out.println(RsaMath.isPrime(p,a));
 
     }

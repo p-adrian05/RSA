@@ -132,35 +132,70 @@ public class RsaMath<type, t> {
      * amiket osszeszorzunk es annak vesszuk az m-el osztott maradekat, ezt adjuk vissza sum(a^2^i mod 100) mod 100
      * @return a biginteger
      */
+//    public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
+//            int i = 0;
+//            BigInteger q = b;
+//            BigInteger sum = BigInteger.ONE;
+//            BigInteger[] dAndR;
+//            List<BigInteger> listPows = new LinkedList<>();
+//
+//            //a kitevot 2-vel addig osztjuk amig 0 nem lesz
+//            while (!q.equals(BigInteger.ZERO)) {
+//                //eltaroljuk a osztas eredmenyet es a maradekot egy tombbe
+//                dAndR = q.divideAndRemainder(BigInteger.TWO);
+//                //tomb elso eleme az osztas eredmenye
+//                q = dAndR[0];
+//                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis 2^i erteket, minden iteracional novelve it
+//                //ez lesz a ketto havtanyai
+//                if (dAndR[1].equals(BigInteger.ONE)) {
+//                    listPows.add(BigInteger.TWO.pow(i));
+//                }
+//                i++;
+//            }
+//        System.out.println(listPows);
+//            //vegigmegyunk ketto hatvanyain, az a alapot a kitevo ketto hatvanyaira emeljuk es vesszuk a megadott az m-el osztott
+//            //maradekot, minden iteracional kapott eredmenyt osszeszorozzuk az elozoekkel
+//            for (BigInteger pow : listPows) {
+//                sum = sum.multiply(a.modPow(pow, m));
+//            }
+//
+//            //vegul a szorzas eredmenyen vesszuk az m mel osztott maradekot
+//            return sum.mod(m);
+//    }
     public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
-            int i = 0;
-            BigInteger q = b;
-            BigInteger sum = BigInteger.ONE;
-            BigInteger[] dAndR;
-            List<BigInteger> listPows = new LinkedList<>();
+        int i = 0;
+        BigInteger q = b;
+        BigInteger sum = BigInteger.ONE;
+        BigInteger[] dAndR;
+        List<BigInteger> bTwoPows = new LinkedList<>();
 
-            //a kitevot 2-vel addig osztjuk amig 0 nem lesz
-            while (!q.equals(BigInteger.ZERO)) {
-                //eltaroljuk a osztas eredmenyet es a maradekot egy tombbe
-                dAndR = q.divideAndRemainder(BigInteger.TWO);
-                //tomb elso eleme az osztas eredmenye
-                q = dAndR[0];
-                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis 2^i erteket, minden iteracional novelve it
-                //ez lesz a ketto havtanyai
-                if (dAndR[1].equals(BigInteger.ONE)) {
-                    listPows.add(BigInteger.TWO.pow(i));
-                }
-                i++;
+        //a kitevot 2-vel addig osztjuk amig 0 nem lesz
+        while (!q.equals(BigInteger.ZERO)) {
+            //eltaroljuk a osztas eredmenyet es a maradekot egy tombbe
+            dAndR = q.divideAndRemainder(BigInteger.TWO);
+            //tomb elso eleme az osztas eredmenye
+            q = dAndR[0];
+            //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis 2^i erteket, minden iteracional novelve it
+            //ez lesz a ketto havtanyai
+            if (dAndR[1].equals(BigInteger.ONE)) {
+                bTwoPows.add(BigInteger.TWO.pow(i));
             }
-        System.out.println(listPows);
-            //vegigmegyunk ketto hatvanyain, az a alapot a kitevo ketto hatvanyaira emeljuk es vesszuk a megadott az m-el osztott
-            //maradekot, minden iteracional kapott eredmenyt osszeszorozzuk az elozoekkel
-            for (BigInteger pow : listPows) {
-                sum = sum.multiply(a.modPow(pow, m));
+            i++;
+        }
+        BigInteger twoPow = BigInteger.TWO;
+        BigInteger modValue = a.mod(m);
+        if(bTwoPows.contains(BigInteger.ONE)){
+            sum = sum.multiply(modValue);
+        }
+        while (twoPow.intValue()<=bTwoPows.get(bTwoPows.size() - 1).intValue()){
+            modValue = modValue.pow(2);
+            modValue = modValue.mod(m);
+            if(bTwoPows.contains(twoPow)){
+                sum = sum.multiply(modValue);
             }
-
-            //vegul a szorzas eredmenyen vesszuk az m mel osztott maradekot
-            return sum.mod(m);
+            twoPow = twoPow.multiply(BigInteger.TWO);
+        }
+        return sum.mod(m);
     }
 
     //x ≡ SUM (ai ∗ yi ∗ Mi) (mod M)
