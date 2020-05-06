@@ -19,25 +19,19 @@ public class Main {
             m = rsa.decryptFast(c,rsa.getPublicKey(),rsa.getPrivateKey());
             System.out.println("Decrypted int message: "+m);
 
+            System.out.println();
+            System.out.println("EXTRAS");
             String stringMes = "password1234";
             System.out.println("String message: "+ stringMes);
-            //String encryptedMessage = rsa.encrypt(stringMes,rsa.getPublicKey());
             List<BigInteger> encryptedMessageList = rsa.encrypt(stringMes,rsa.getPublicKey());
-            System.out.println("Crypted string message: "  +encryptedMessageList);
+            System.out.println("Crypted string message list: "  +encryptedMessageList);
+            String encryptedMessage = rsa.encryptString(stringMes,rsa.getPublicKey());
+            System.out.println("Crypted string message : "  +encryptedMessage);
             String mes = rsa.decrypt(encryptedMessageList,rsa.getPublicKey(),rsa.getPrivateKey());
-            System.out.println("Decrypted string message: "+mes);
+            String mes2 = rsa.decryptString(encryptedMessage,rsa.getPublicKey(),rsa.getPrivateKey());
+            System.out.println("Decrypted string message from list: "+mes);
+            System.out.println("Decrypted string message from string: "+mes2);
         }
-//        BigInteger a = new BigInteger(String.valueOf(840));
-//        BigInteger b = new BigInteger(String.valueOf(1100));
-//        System.out.println(List.of(RsaMath.euclidExtended(a,b)));
-
-//        BigInteger a = new BigInteger(String.valueOf(5));
-//        BigInteger b = new BigInteger(String.valueOf(117));
-//        BigInteger m = new BigInteger(String.valueOf(19));
-//        BigInteger p = new BigInteger(String.valueOf(177));
-//        System.out.println(RsaMath.fastMod(a,b,m));
-        //System.out.println(RsaMath.isPrime(p,a));
-
     }
 
 }

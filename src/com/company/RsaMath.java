@@ -2,9 +2,7 @@ package com.company;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.function.Supplier;
-
-public class RsaMath<type, t> {
+public class RsaMath {
 
     public RsaMath(){}
 
@@ -90,12 +88,9 @@ public class RsaMath<type, t> {
             while (d.mod(BigInteger.TWO).equals(BigInteger.ZERO)){
                 d = d.divide(BigInteger.TWO);
                 s++;
-
             }
-
             //tobb a bazis szamra vizsgaljuk
             BigInteger t;
-
             int checkIfPrimeCount = 0;
             int checkForAllA = 0;
             for (BigInteger aValue : aValues) {
@@ -118,50 +113,6 @@ public class RsaMath<type, t> {
         throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
 
     }
-
-    /**
-     *
-     *
-     * @param a egesz szam alap
-     * @param b  kitevo
-     * @param m  egesz szam
-     *          a^b (mod m) keplet
-     * Eloszor felbontjuk a kitevot 2 hatvanyaira, osztjuk kettovel amig 0-t nem kapunk
-     * es elmentjuk a 2 hatvanyait egy listaba, ami pont i lesz akkor ha 1 maradekot kapunk 2-vel osztva.
-     * Masodik lepesben pedig az alapot a kitevo 2 hatvanyaira emeljuk egyesevel es vesszuk az m-mel osztott maradekat (a^2^i mod 100)
-     * amiket osszeszorzunk es annak vesszuk az m-el osztott maradekat, ezt adjuk vissza sum(a^2^i mod 100) mod 100
-     * @return a biginteger
-     */
-//    public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
-//            int i = 0;
-//            BigInteger q = b;
-//            BigInteger sum = BigInteger.ONE;
-//            BigInteger[] dAndR;
-//            List<BigInteger> listPows = new LinkedList<>();
-//
-//            //a kitevot 2-vel addig osztjuk amig 0 nem lesz
-//            while (!q.equals(BigInteger.ZERO)) {
-//                //eltaroljuk a osztas eredmenyet es a maradekot egy tombbe
-//                dAndR = q.divideAndRemainder(BigInteger.TWO);
-//                //tomb elso eleme az osztas eredmenye
-//                q = dAndR[0];
-//                //tomb masodik eleme a maradek, ami ha 1, akkor eltaroljuk az aktualis 2^i erteket, minden iteracional novelve it
-//                //ez lesz a ketto havtanyai
-//                if (dAndR[1].equals(BigInteger.ONE)) {
-//                    listPows.add(BigInteger.TWO.pow(i));
-//                }
-//                i++;
-//            }
-//        System.out.println(listPows);
-//            //vegigmegyunk ketto hatvanyain, az a alapot a kitevo ketto hatvanyaira emeljuk es vesszuk a megadott az m-el osztott
-//            //maradekot, minden iteracional kapott eredmenyt osszeszorozzuk az elozoekkel
-//            for (BigInteger pow : listPows) {
-//                sum = sum.multiply(a.modPow(pow, m));
-//            }
-//
-//            //vegul a szorzas eredmenyen vesszuk az m mel osztott maradekot
-//            return sum.mod(m);
-//    }
     public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
         int i = 0;
         BigInteger q = b;
