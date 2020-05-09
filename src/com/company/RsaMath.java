@@ -113,6 +113,7 @@ public class RsaMath {
         throw new IllegalArgumentException("Wrong arguments: p must be > 3 and a must be >=2 and <p");
 
     }
+
     public static BigInteger fastMod(BigInteger a, BigInteger b, BigInteger m){
         int i = 0;
         BigInteger q = b;
