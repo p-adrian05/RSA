@@ -38,13 +38,11 @@ public class RsaMath {
         return a;
     }
     public static BigInteger[] euclidExtended(BigInteger a, BigInteger b) {
-        //r maradek
-        //q osztas eredmenye
         BigInteger x0 = BigInteger.ONE;
         BigInteger x1 = BigInteger.ZERO;
         BigInteger y0 = BigInteger.ZERO;
         BigInteger y1 = BigInteger.ONE;
-        BigInteger k = BigInteger.ZERO;
+        int k = 0;
         BigInteger x;
         BigInteger y;
         BigInteger r;
@@ -61,10 +59,10 @@ public class RsaMath {
             y1 = y1.multiply(q).add(y0);
             x0 = x;
             y0 = y;
-            k = k.add(BigInteger.ONE);
+            k++;
         }
-        x = BigInteger.valueOf(-1).pow(k.intValue()).multiply(x0);
-        y = BigInteger.valueOf(-1).pow(k.intValue() + 1).multiply(y0);
+        x = BigInteger.valueOf(-1).pow(k).multiply(x0);
+        y = BigInteger.valueOf(-1).pow(k + 1).multiply(y0);
         return new BigInteger[]{a, x, y};
     }
 
@@ -156,14 +154,10 @@ public class RsaMath {
         BigInteger M = Arrays.stream(m).reduce(BigInteger::multiply).get();
         BigInteger Mi;
         BigInteger sum = BigInteger.ZERO;
-        //minden a ra Mi az aktualis i-edik modulo M-mel valo osztasanak eredmenye
-        //az aktualais a erteket szorozzuk az Mi és i-edik moduloval kapott kiterjesztett euc.
-        //kapott tomb masodik ertekevel ami az x erteke, majd szorozzuk még a Mi ertekevel.
         for(int i = 0; i<a.length;i++){
             Mi = M.divide(m[i]);
             sum = sum.add(a[i].multiply(euclidExtended(Mi,m[i])[1]).multiply(Mi));
         }
-        //vegul vesszuk az M-vel valo osztasi maradekot
         return sum.mod(M);
     }
 

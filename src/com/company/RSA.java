@@ -80,36 +80,30 @@ public class RSA {
         while(p.equals(q)){
             p=RsaMath.generatePrime(MIN,MAX);
         }
-        try{
-            n = p.multiply(q);
-            f = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+        n = p.multiply(q);
+        f = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
-            System.out.println("p: "+p);
-            System.out.println("q: "+q);
-            System.out.println("n: "+n);
-            System.out.println("f: "+f);
+        System.out.println("p: "+p);
+        System.out.println("q: "+q);
+        System.out.println("n: "+n);
+        System.out.println("f: "+f);
 
-            while (!RsaMath.isRelativePrime(e,f)){
-                e = RsaMath.generateRandomBigInteger(2,f.intValue()-1);
-            }
-            System.out.println("e: "+e);
-            x = RsaMath.euclidExtended(e,f)[1];
-            System.out.println("x: "+x);
-            if(x.intValue()<0){
-                d = x.add(f);
-            }else{
-                d = x;
-            }
-            this.publicKey = new BigInteger[]{n,e};
-            this.privateKey = d;
-            this.p = p;
-            this.q = q;
+        while (!RsaMath.isRelativePrime(e,f)){
+            e = RsaMath.generateRandomBigInteger(2,f.intValue()-1);
         }
-        catch(Exception ex){
-            ex.printStackTrace();
+        System.out.println("e: "+e);
+        x = RsaMath.euclidExtended(e,f)[1];
+        System.out.println("x: "+x);
+        if(x.intValue()<0){
+            d = x.add(f);
+        }else{
+            d = x;
         }
+        this.publicKey = new BigInteger[]{n,e};
+        this.privateKey = d;
+        this.p = p;
+        this.q = q;
     }
-
 
     /**
      * Extras
@@ -160,15 +154,4 @@ public class RSA {
 
      return decryptedMessage.toString();
     }
-
-
-
-
-
-
-
-
-
-
-
 }
