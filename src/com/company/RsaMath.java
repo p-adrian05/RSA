@@ -95,6 +95,7 @@ public class RsaMath {
                     temp = fastMod(aValue,dValues.get(i), p);
                     if (temp.equals(p.subtract(BigInteger.ONE))) {
                         checkForAllA++;
+                        break;
                     }
                 }
             }
