@@ -108,28 +108,28 @@ public class RsaMath {
         BigInteger q = b;
         BigInteger sum = BigInteger.ONE;
         BigInteger[] dAndR;
-        List<BigInteger> bTwoPows = new LinkedList<>();
+        List<Integer> bTwoPows = new LinkedList<>();
 
         while (!q.equals(BigInteger.ZERO)) {
             dAndR = q.divideAndRemainder(BigInteger.TWO);
             q = dAndR[0];
             if (dAndR[1].equals(BigInteger.ONE)) {
-                bTwoPows.add(BigInteger.TWO.pow(i));
+                bTwoPows.add(1 << i);
             }
             i++;
         }
-        BigInteger twoPow = BigInteger.TWO;
+        int twoPow = 2;
         BigInteger modValue = a.mod(m);
-        if(bTwoPows.contains(BigInteger.ONE)){
+        if(bTwoPows.contains(1)){
             sum = sum.multiply(modValue);
         }
-        while (twoPow.intValue()<=bTwoPows.get(bTwoPows.size() - 1).intValue()){
+        while (twoPow<=bTwoPows.get(bTwoPows.size() - 1)){
             modValue = modValue.pow(2);
             modValue = modValue.mod(m);
             if(bTwoPows.contains(twoPow)){
                 sum = sum.multiply(modValue);
             }
-            twoPow = twoPow.multiply(BigInteger.TWO);
+            twoPow <<= 1;
         }
         return sum.mod(m);
     }
